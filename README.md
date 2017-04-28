@@ -33,6 +33,10 @@ To create a Vagrant box for `11.0-RELEASE` using a ZFS filesystem:
 ```sh
 % ./automatic-11.0-release-zfs.sh
 ```
+If you want to disable the default NFS share mount modify the share config in Vagrantfile e.g.:
+```sh
+% config.vm.synced_folder ".", "/vagrant", type: "nfs", disabled: true
+```
 
 ## Debugging Builds
 
