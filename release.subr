@@ -1,9 +1,11 @@
 #!/bin/sh
-# Autodetect the current version of -CURRENT on freebsd.org.
+#set -x
+# Autodetect the current version of -RELEASE on freebsd.org.
 # This assumes the template boot command is still valid.
 # Any arguments are passed to the packer instance.
 
-URL="ftp://ftp.FreeBSD.org/pub/FreeBSD/snapshots/ISO-IMAGES/11.0/"
+URL="ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/11.0/"
+
 
 # Valid values are "none", "md5", "sha1", "sha256", or "sha512".
 CHECKSUM_TYPE="sha512"
@@ -16,7 +18,7 @@ error() {
 
 which curl >/dev/null 2>&1 || error "Curl required, but not available?"
 
-echo "Looking for latest -CURRENT from ${URL} ..."
+echo "Looking for latest -RELEASE from ${URL} ..."
 
 cksumfile=$(curl -sl ${URL} | grep -i "${CHECKSUM_TYPE}" | grep amd64 | sort | tail -1)
 [ -z "$cksumfile" ] && error "Could not detect the latest checksum file"
@@ -30,9 +32,9 @@ cksum=$(echo $cksumline | awk '{print $4}')
 	error "Pulled latest checksum file, but could not parse line:" \
 	    "  $cksumline"
 
-rev=$(echo $isofile | awk -Famd64- '{print $2}' | awk -F-disc1.iso '{print $1}')
-[ -z "$rev" ] && error \
-	"Could not detect ISO date/revision in '${isofile}':" \
-	"  $cksumline"
+#rev=$(echo $isofile | awk -Famd64- '{print $2}' | awk -F-disc1.iso '{print $1}')
+#[ -z "$rev" ] && error \
+#	"Could not detect ISO date/revision in '${isofile}':" \
+#	"  $cksumline"
 
 echo "Using ${isofile} (checksum ${cksum}) ..."

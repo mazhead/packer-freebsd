@@ -26,7 +26,7 @@ if [ "$PACKER_BUILDER_TYPE" = 'vmware-iso' ]; then
 	sysrc vmware_guest_vmxnet_enable=YES
 	sysrc vmware_guestd_enable=YES
 elif [ "$PACKER_BUILDER_TYPE" = 'virtualbox-iso' ]; then
-	pkg install -y virtualbox-ose-additions
+	pkg install -y virtualbox-ose-additions-nox11
 	sysrc ifconfig_em1="inet 10.6.66.42 netmask 255.255.255.0"
 	sysrc vboxguest_enable="YES"
 	sysrc vboxservice_enable="YES"
@@ -52,8 +52,12 @@ echo 'Changing roots shell back...'
 chsh -s tcsh root
 
 # This causes a hang on shutdown that we cannot automatically recover from
-#echo 'Patching FreeBSD...'
-#freebsd-update fetch install > /dev/null
+echo 'Patching FreeBSD...'
+env PAGER=cat freebsd-update fetch install --not-running-from-cron > /dev/null
+
+echo 'Cleanup...'
+rm -rf /var/cache/pkg
+rm -rf /var/db/freebsd-update
 
 echo
 echo 'Post-install complete.'

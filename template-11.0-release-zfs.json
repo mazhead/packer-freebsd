@@ -1,0 +1,96 @@
+{
+  "variables": {
+    "iso_checksum": "a9ab27f18a53130ee25dea975059ceab7307deafb991839e228ab3a45346c0b8060766d183985ae28716931f211ad2b22fc13c819516a4e8ab63aa6162133c4d",
+    "iso_checksum_type": "sha512",
+    "iso_version": "11.0"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "I<wait>",
+        "<enter><wait>",
+        "freebsd-vagrant",
+        "<enter><wait>",
+        "p<spacebar>",
+        "<enter><wait>",
+        "<down><down><down>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<spacebar><wait>",
+        "<enter><wait>",
+        "Y",
+        "<wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10>",
+        "vagrant<enter>",
+        "vagrant<enter>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait10><wait5>",
+        "N<wait>",
+        "<enter><wait>",
+        "a<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait5>",
+        "<enter><wait>",
+        "n<spacebar><wait>",
+        "p<spacebar><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "vagrant<enter><wait>",
+        "Vagrant User<enter><wait>",
+        "<enter><wait>",
+        "wheel<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "tcsh<enter><wait>",
+        "<enter><wait>",
+        "0700<enter><wait>",
+        "<enter><wait>",
+        "yes<enter>",
+        "<enter><wait>",
+        "yes<enter><wait>",
+        "no<enter><wait>",
+        "<enter><wait>",
+        "Y",
+        "sed -i -e 's/#PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config<enter><wait>",
+        "echo 'autoboot_delay=\"-1\"' >> /boot/loader.conf<enter><wait>",
+        "chsh -s sh root<enter><wait>",
+        "exit<enter><wait>",
+        "R<wait10><wait10><wait10>"
+      ],
+      "boot_wait": "45s",
+      "disk_size": 20480,
+      "guest_os_type": "FreeBSD_64",
+      "headless": "true",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "http://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/{{user `iso_version`}}/FreeBSD-{{user `iso_version`}}-RELEASE-amd64-disc1.iso",
+      "shutdown_command": "poweroff; poweroff",
+      "ssh_password": "vagrant",
+      "ssh_username": "root",
+      "ssh_wait_timeout": "30s"
+    }
+  ],
+  "provisioners": [
+    {
+      "scripts": [
+        "scripts/zroot-setup.sh",
+        "scripts/postinstall.sh"
+      ],
+      "type": "shell"
+    }
+  ],
+  "post-processors": [
+    {
+      "output": "FreeBSD-RELEASE-zfs-{{.Provider}}.box",
+      "type": "vagrant",
+      "override": {
+        "virtualbox": {
+          "vagrantfile_template": "./Vagrantfile.virtualbox"
+        }
+      }
+    }
+  ]
+}
