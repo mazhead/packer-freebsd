@@ -1,4 +1,4 @@
-# FreeBSD Packer Templates
+# FreeBSD Packer Template
 
 Creates FreeBSD images using official `disk1.iso` snapshot and release media.
 
@@ -49,3 +49,17 @@ The following are "common" problems with workarounds:
 2. Packer fails to connect via SSH to the instance to do the post-install.
    Possible solution: There are too many SSH keys loaded in your agent.
    Prefix your command with `env SSH_AUTH_SOCK=/dev/null ...`
+
+## Images for download
+
+Images produced by this repo / script are located here:
+[Hashicorp Atlas](https://atlas.hashicorp.com/mazhead/boxes/freebsd11-release-zfs)
+
+To run this box do: 
+```
+mkdir <somefolder>
+cd <somefolder>
+vagrant init mazhead/freebsd11-release-zfs
+vagrant up --provider virtualbox
+```
+Recommendation is to use the Vagranfile from this repo.
